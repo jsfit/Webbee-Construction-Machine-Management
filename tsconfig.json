@@ -5,6 +5,8 @@
     "types": ["react-native", "jest", "node"],
     "typeRoots": ["@types", "./node_modules/@types"],
     "baseUrl": "..",
+    "strictNullChecks": true,
+    "noImplicitAny": false,
     "paths": {
       "@/*": ["./src/*"],
       "types/*": ["./@types/*"]

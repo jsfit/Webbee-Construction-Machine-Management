@@ -22,17 +22,20 @@ export interface ICategoryList {
 
 export class Item {
   _id: string = '';
-  model = observable.map({});
+  model: {} = observable.object({});
 
-  constructor(category?: CategoryModel) {
-    this._id = category?._id ?? uuidv4();
+  constructor(item?: Item) {
+    this._id = item?._id ?? uuidv4();
+    if (item?.model) {
+      this.model = item?.model;
+    }
 
     makeAutoObservable(this);
   }
 
-  setAttribute(key?: string, value?: any) {
-    if (key) {
-      this.model.set(key, value);
+  setAttribute(attribute: string, value?: any) {
+    if (attribute) {
+      this.model[attribute] = value;
     }
   }
 }
@@ -56,6 +59,9 @@ export class CategoryModel implements ICategory {
       this.addField();
     }
 
+    if (category?.items.length) {
+      this.items = category?.items.map((item: Item) => new Item(item));
+    }
     makeAutoObservable(this);
   }
 
@@ -95,7 +101,7 @@ export class CategoryListModel implements ICategoryList {
       this,
       {
         name: 'CategoryListModel',
-
+        stringify: true,
         properties: [
           {
             key: 'categories',

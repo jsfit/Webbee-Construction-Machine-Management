@@ -25,6 +25,7 @@ import { FieldModel, InputTypes } from 'WebbeeReactNative/src/models/Fields';
 import { Menu, Divider, Provider } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { Layout } from 'WebbeeReactNative/src/theme';
 
 const fieldMenuItems = ['Text', 'Date', 'Number', 'Checkbox'];
 
@@ -68,15 +69,20 @@ const FieldWrapper: React.FC<{
     case InputTypes.Text:
     case InputTypes.Number:
       return (
-        <TextInput
-          keyboardType={
-            field.fieldType === InputTypes.Text ? 'default' : 'numeric'
-          }
-          label={field.name}
-          value={item.model.get(field._id)}
-          onChangeText={(value: any) => item.setAttribute(field._id, value)}
-          style={{ flex: 1 }}
-        />
+        <View style={{ flexDirection: 'column', flex: 1, marginVertical: 5 }}>
+          <Text>{field.name}</Text>
+          <TextInput
+            key={item._id}
+            keyboardType={
+              field.fieldType === InputTypes.Text ? 'default' : 'numeric'
+            }
+            value={item.model[field._id ?? '']}
+            onChangeText={(value: any) =>
+              item.setAttribute(field._id ?? '', value)
+            }
+            style={{ flex: 1 }}
+          />
+        </View>
       );
 
     default:
@@ -106,7 +112,7 @@ const Category: React.FC<{ category: CategoryModel }> = observer(
           <View style={styles.cardWrapper}>
             {category.items.map((item, key) => {
               return (
-                <Card style={[Layout.fullWidth, Layout.mb5]} key={key}>
+                <Card style={[Layout.fullWidth, styles.mb10]} key={key}>
                   <Card.Content>
                     {category.fields.map((field: FieldModel, key: number) => {
                       return (
@@ -176,5 +182,8 @@ const styles = StyleSheet.create({
   },
   danger: {
     backgroundColor: 'red',
+  },
+  mb10: {
+    marginBottom: 10,
   },
 });
