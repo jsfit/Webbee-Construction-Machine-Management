@@ -28,7 +28,7 @@ export class CategoryModel implements ICategory {
 
   constructor(category?: CategoryModel) {
     this._id = category?._id ?? uuidv4();
-    this.name = category?.name ?? '';
+    this.name = category?.name ?? 'New Category';
     this.fields = category?.fields ?? [];
 
     if (category?.fields?.length) {
@@ -64,7 +64,6 @@ export class CategoryListModel implements ICategoryList {
 
   constructor() {
     this._id = uuidv4();
-    makeAutoObservable(this);
 
     makePersistable(
       this,
@@ -89,6 +88,7 @@ export class CategoryListModel implements ICategoryList {
 
       { delay: 100, fireImmediately: false },
     );
+    makeAutoObservable(this);
   }
 
   addCategory = () => {
@@ -102,4 +102,5 @@ export class CategoryListModel implements ICategoryList {
   };
 }
 
-export const CategoryListModelInstance = new CategoryListModel();
+const CategoryListModelInstance = new CategoryListModel();
+export { CategoryListModelInstance };

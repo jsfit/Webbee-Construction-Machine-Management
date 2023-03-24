@@ -12,9 +12,9 @@ import { useTheme } from '../hooks';
 import MainNavigator from './Main';
 import { useFlipper } from '@react-navigation/devtools';
 import { ApplicationStackParamList } from '../../@types/navigation';
+import { SideMenu } from '../components';
 
-const Stack = createStackNavigator<ApplicationStackParamList>();
-const Drawer = createDrawerNavigator();
+const Drawer = createDrawerNavigator<ApplicationStackParamList>();
 
 // @refresh reset
 const ApplicationNavigator = () => {
@@ -29,13 +29,16 @@ const ApplicationNavigator = () => {
     <SafeAreaView style={[Layout.fill, { backgroundColor: colors.card }]}>
       <NavigationContainer theme={NavigationTheme} ref={navigationRef}>
         <StatusBar barStyle={darkMode ? 'light-content' : 'dark-content'} />
-        <Drawer.Navigator screenOptions={{ headerShown: false }}>
-          <Drawer.Screen name="Main" component={MainNavigator} />
+        <Drawer.Navigator
+          screenOptions={{ headerShown: true }}
+          drawerContent={props => <SideMenu {...props} />}
+        >
+          <Drawer.Screen
+            name="Main"
+            component={MainNavigator}
+            options={{ title: 'Manage Categories' }}
+          />
         </Drawer.Navigator>
-        {/* <Drawer.Navigator initialRouteName="Home">
-          <Drawer.Screen name="Home" component={HomeScreen} />
-          <Drawer.Screen name="Notifications" component={NotificationsScreen} />
-        </Drawer.Navigator> */}
       </NavigationContainer>
     </SafeAreaView>
   );

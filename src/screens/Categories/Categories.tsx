@@ -12,7 +12,10 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../hooks';
 import { changeTheme, ThemeState } from '../../store/theme';
 import { observer } from 'mobx-react-lite';
-import { CategoryListModelInstance } from 'WebbeeReactNative/src/models/CategoryModel';
+import {
+  CategoryListModelInstance,
+  CategoryListModel,
+} from 'WebbeeReactNative/src/models/CategoryModel';
 import { FAB } from 'react-native-paper';
 import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
 import { TextInput } from 'react-native-paper';
@@ -157,7 +160,13 @@ const Categories: React.FC<{ list: CategoryListModel }> = observer(
             );
           })}
         </ScrollView>
-        <FAB style={styles.fab} small icon="plus" onPress={list.addCategory} />
+        <FAB
+          style={styles.fab}
+          small
+          icon="plus"
+          onPress={list.addCategory}
+          color="white"
+        />
       </>
     );
   },
@@ -182,6 +191,7 @@ const styles = StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 0,
+    backgroundColor: 'black',
   },
   cardWrapper: {
     width: '100%',
