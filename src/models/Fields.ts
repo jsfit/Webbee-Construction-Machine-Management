@@ -26,11 +26,11 @@ export class FieldModel implements IField {
   fieldType: string | undefined = '';
 
   constructor(field: IField) {
-    this.name = field.name;
-    this.fieldType = field.fieldType;
-    this._id = field._id || uuidv4();
+    this._id = field?._id || uuidv4();
 
-    this.init();
+    this.name = field.name ?? '';
+    this.fieldType = field?.fieldType ?? '';
+
     makeAutoObservable(this);
   }
 
@@ -41,6 +41,4 @@ export class FieldModel implements IField {
   setFieldType = (name: string) => {
     this.fieldType = name;
   };
-
-  init = () => {};
 }
