@@ -87,7 +87,7 @@ export class CategoryListModel implements ICategoryList {
         storage: AsyncStorage,
       },
 
-      { delay: 10, fireImmediately: false },
+      { delay: 100, fireImmediately: false },
     );
   }
 
@@ -101,3 +101,5 @@ export class CategoryListModel implements ICategoryList {
     );
   };
 }
+
+export const CategoryListModelInstance = new CategoryListModel();

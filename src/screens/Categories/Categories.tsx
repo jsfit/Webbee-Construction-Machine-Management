@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../hooks';
 import { changeTheme, ThemeState } from '../../store/theme';
 import { observer } from 'mobx-react-lite';
-import { CategoryListModel } from 'WebbeeReactNative/src/models/CategoryModel';
+import { CategoryListModelInstance } from 'WebbeeReactNative/src/models/CategoryModel';
 import { FAB } from 'react-native-paper';
 import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
 import { TextInput } from 'react-native-paper';
@@ -164,7 +164,7 @@ const Categories: React.FC<{ list: CategoryListModel }> = observer(
 );
 
 const CategoriesScreenWrapper = observer(() => {
-  const [list] = useState(() => new CategoryListModel());
+  const [list] = useState(() => CategoryListModelInstance);
 
   useEffect(() => {}, []);
 
