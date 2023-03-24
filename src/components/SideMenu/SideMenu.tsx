@@ -11,16 +11,47 @@ import {
   DrawerItemList,
   DrawerItem,
 } from '@react-navigation/drawer';
+import { useNavigation } from '@react-navigation/core';
+
 const SideMenu = observer(props => {
   const [list] = useState(() => CategoryListModelInstance);
+  const [activeLink, setActiveLink] = useState('Main');
+  const navigation = useNavigation();
+
   return (
     <DrawerContentScrollView {...props}>
       {list.categories.map((category, key) => {
         return (
-          <DrawerItem label={category.name} onPress={() => {}} key={key} />
+          <DrawerItem
+            label={category.name}
+            onPress={() => {
+              setActiveLink(category._id);
+
+              navigation.navigate('Category', {
+                _id: category._id,
+                title: category.name,
+              });
+            }}
+            style={{
+              backgroundColor: activeLink === category._id ? '#b1e0f5' : '',
+            }}
+            key={key}
+            {...props}
+          />
         );
       })}
-      <DrawerItemList {...props} />
+
+      <DrawerItem
+        label={'Manage Categories'}
+        onPress={() => {
+          setActiveLink('Main');
+          navigation.navigate('Main');
+        }}
+        style={{
+          backgroundColor: activeLink === 'Main' ? '#b1e0f5' : '',
+        }}
+        {...props}
+      />
     </DrawerContentScrollView>
   );
 });

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -22,7 +22,7 @@ import { TextInput } from 'react-native-paper';
 import { FieldModel, InputTypes } from 'WebbeeReactNative/src/models/Fields';
 import { Menu, Divider, Provider } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { useFocusEffect } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 const fieldMenuItems = ['Text', 'Date', 'Number', 'Checkbox'];
 
@@ -173,10 +173,16 @@ const Categories: React.FC<{ list: CategoryListModel }> = observer(
   },
 );
 
-const CategoriesScreenWrapper = observer(() => {
-  const [list] = useState(() => CategoryListModelInstance);
+const CategoriesScreenWrapper = observer(props => {
+  const category = useMemo(
+    () => CategoryListModelInstance.getCategoryById(props.route.params._id),
+    [props?.route?.params?._id],
+  );
+  console.log(category?._id, category?.name);
+  useEffect(() => {}, []);
 
-  return <Categories list={list} />;
+  return <Text>asdasd</Text>;
+  // return <Categories list={list} />;
 });
 
 export default CategoriesScreenWrapper;

@@ -35,9 +35,10 @@ export class CategoryModel implements ICategory {
       this.fields = category.fields.map(
         (field: FieldModel) => new FieldModel(field),
       );
+    } else {
+      this.addField();
     }
 
-    this.addField();
     makeAutoObservable(this);
   }
 
@@ -99,6 +100,10 @@ export class CategoryListModel implements ICategoryList {
     this.categories = this.categories.filter(
       (_category: ICategory) => _category._id != category._id,
     );
+  };
+
+  getCategoryById = (_id: string) => {
+    return this.categories.find(category => category._id == _id);
   };
 }
 
