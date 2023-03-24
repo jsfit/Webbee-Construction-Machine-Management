@@ -107,7 +107,7 @@ const Categories: React.FC<{ list: CategoryListModel }> = observer(
 
     return (
       <>
-        <ScrollView>
+        <ScrollView contentContainerStyle={styles.containerStyle}>
           {/* <TouchableOpacity
             style={[Common.button.circle, Gutters.regularBMargin]}
             onPress={() => onChangeTheme({ darkMode: !isDark })}
@@ -145,7 +145,10 @@ const Categories: React.FC<{ list: CategoryListModel }> = observer(
                   </Card.Content>
                   <Card.Actions>
                     <Button onPress={category.addField}>ADD NEW FIELD</Button>
-                    <Button style={{ backgroundColor: 'red' }}>
+                    <Button
+                      style={styles.danger}
+                      onPress={() => list.removeCategory(category)}
+                    >
                       <Icon name="delete" size={20} color="white" />
                     </Button>
                   </Card.Actions>
@@ -171,6 +174,9 @@ const CategoriesScreenWrapper = observer(() => {
 export default CategoriesScreenWrapper;
 
 const styles = StyleSheet.create({
+  containerStyle: {
+    paddingBottom: 80,
+  },
   fab: {
     position: 'absolute',
     margin: 16,
@@ -192,5 +198,8 @@ const styles = StyleSheet.create({
     borderRadius: 1,
     height: '100%',
     justifyContent: 'center',
+  },
+  danger: {
+    backgroundColor: 'red',
   },
 });
