@@ -15,5 +15,9 @@ module.exports = {
     ],
     'inline-dotenv',
     'react-native-reanimated/plugin', // needs to be last
+    '@babel/plugin-proposal-class-properties',
   ],
+  assumptions: {
+    setPublicClassFields: false,
+  },
 };

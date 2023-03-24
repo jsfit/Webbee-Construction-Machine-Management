@@ -11,7 +11,7 @@
     "type-check": "tsc",
     "test:report": "jest --collectCoverage --coverageDirectory=\"./coverage\" --ci --reporters=default --reporters=jest-junit --coverage",
     "pod-install": "cd ios && RCT_NEW_ARCH_ENABLED=1 bundle exec pod install && cd ..",
-    "ins":"git clean -xdf && yarn && bundle install && yarn pod-install"
+    "ins": "git clean -xdf && yarn && bundle install && yarn pod-install"
   },
   "dependencies": {
     "@react-native-masked-view/masked-view": "^0.2.8",
@@ -20,6 +20,8 @@
     "@react-navigation/stack": "^6.3.16",
     "@reduxjs/toolkit": "^1.9.3",
     "i18next": "^22.4.10",
+    "mobx": "^6.8.0",
+    "mobx-react-lite": "^3.4.3",
     "react": "18.2.0",
     "react-i18next": "^12.2.0",
     "react-native": "0.71.4",
