@@ -129,5 +129,11 @@ export default function ({}: ThemeVariables) {
     right0: {
       right: 0,
     },
+    margin5: {
+      margin: 5,
+    },
+    mb5: {
+      marginBottom: 5,
+    },
   });
 }

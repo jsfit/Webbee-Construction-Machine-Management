@@ -5,7 +5,7 @@ import {
   makeObservable,
   observable,
 } from 'mobx';
-import { IField } from './Fields';
+import { FieldModel, IField } from './Fields';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface ICategory {
@@ -13,17 +13,20 @@ export interface ICategory {
   name: string;
   fields: IField[];
 }
+export interface ICategoryList {
+  _id: string;
+  categories: ICategory[];
+}
 
 export class CategoryModel implements ICategory {
   _id: string = '';
-  name: string = '';
-  fields: IField[] = [];
-  items: IField[][] = [];
+  name: string = 'New Category';
+  fields: FieldModel[] = [];
+  items: FieldModel[][] = [];
 
   constructor() {
     this._id = uuidv4();
-
-    this.init();
+    this.addField();
     makeAutoObservable(this);
   }
 
@@ -33,14 +36,18 @@ export class CategoryModel implements ICategory {
     this.name = name;
   };
 
-  addItem = () => {
-    this.items.push(this.fields);
+  addField = () => {
+    this.fields.push(
+      new FieldModel({
+        fieldType: 'Text',
+      }),
+    );
   };
 }
 
-export class CategoryListModel {
+export class CategoryListModel implements ICategoryList {
   _id: string = '';
-  categories: ICategory[] = [];
+  categories: CategoryModel[] = [];
 
   constructor() {
     this._id = uuidv4();
@@ -48,7 +55,7 @@ export class CategoryListModel {
   }
 
   addCategory = () => {
-    this.categories.push(new CategoryModel());
+    this.categories.unshift(new CategoryModel());
   };
 
   removeCategory = (category: ICategory) => {
