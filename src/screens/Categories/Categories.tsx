@@ -17,22 +17,76 @@ import { FAB } from 'react-native-paper';
 import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
 import { TextInput } from 'react-native-paper';
 import { FieldModel, InputTypes } from 'WebbeeReactNative/src/models/Fields';
+import { Menu, Divider, Provider } from 'react-native-paper';
+import Icon from 'react-native-vector-icons/AntDesign';
+
+const fieldMenuItems = ['Text', 'Date', 'Number', 'Checkbox'];
+
+const FieldMenu: React.FC<{
+  title: string | undefined;
+  onChange: (name: string) => void;
+}> = observer(({ title, onChange }) => {
+  const [showDropDown, setShowDropDown] = useState(false);
+
+  const onPressItem = (name: string) => {
+    setShowDropDown(false);
+    onChange(name);
+  };
+  return (
+    <Menu
+      visible={showDropDown}
+      onDismiss={() => setShowDropDown(false)}
+      anchor={
+        <Button
+          mode="outlined"
+          style={styles.fieldUpdateButton}
+          onPress={() => setShowDropDown(true)}
+        >
+          {title}
+        </Button>
+      }
+    >
+      {fieldMenuItems.map((name, key) => {
+        return (
+          <Menu.Item onPress={() => onPressItem(name)} title={name} key={key} />
+        );
+      })}
+    </Menu>
+  );
+});
+// const FieldWrapper: React.FC<{ field: FieldModel }> = observer(({ field }) => {
+//   switch (field.fieldType) {
+//     case InputTypes.Text:
+//     case InputTypes.Number:
+//       return (
+//         <TextInput
+//           keyboardType={
+//             field.fieldType === InputTypes.Text ? 'default' : 'numeric'
+//           }
+//           label={'Field'}
+//           value={field.name}
+//           onChangeText={field.setName}
+//           style={{ flex: 1 }}
+//         />
+//       );
+
+//     default:
+//       return <Text>123123</Text>;
+//   }
+// });
 
 const FieldWrapper: React.FC<{ field: FieldModel }> = observer(({ field }) => {
-  switch (field.fieldType) {
-    case InputTypes.Text:
-      return (
-        <TextInput
-          label={'Field'}
-          value={field.name}
-          onChangeText={field.setName}
-          style={{ flex: 1 }}
-        />
-      );
-
-    default:
-      return <Text>123123</Text>;
-  }
+  return (
+    <>
+      <TextInput
+        label={'Field'}
+        value={field.name}
+        onChangeText={field.setName}
+        style={{ flex: 1 }}
+      />
+      <FieldMenu title={field.fieldType} onChange={field.setFieldType} />
+    </>
+  );
 });
 
 const Categories: React.FC<{ list: CategoryListModel }> = observer(
@@ -75,35 +129,25 @@ const Categories: React.FC<{ list: CategoryListModel }> = observer(
                       onChangeText={category.setName}
                     />
 
-                    {category.fields.map((field: FieldModel) => {
+                    {category.fields.map((field: FieldModel, key: number) => {
                       return (
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            flex: 1,
-                            width: '100%',
-                            justifyContent: 'space-evenly',
-                          }}
-                        >
+                        <View style={styles.fieldWrapper} key={key}>
                           <FieldWrapper field={field} />
-                          <Button
-                            mode="outlined"
-                            onPress={() => console.log('Pressed')}
-                            style={{
-                              borderRadius: 1,
-                              height: '100%',
-                              justifyContent: 'center',
-                            }}
-                          >
-                            {field.fieldType}
-                          </Button>
+                          <Icon
+                            name="close"
+                            size={25}
+                            style={{ alignSelf: 'center', marginRight: 1 }}
+                            onPress={() => category.removeField(field)}
+                          />
                         </View>
                       );
                     })}
                   </Card.Content>
                   <Card.Actions>
-                    <Button>Cancel</Button>
-                    <Button>Ok</Button>
+                    <Button onPress={category.addField}>ADD NEW FIELD</Button>
+                    <Button style={{ backgroundColor: 'red' }}>
+                      <Icon name="delete" size={20} color="white" />
+                    </Button>
                   </Card.Actions>
                 </Card>
               </View>
@@ -119,9 +163,7 @@ const Categories: React.FC<{ list: CategoryListModel }> = observer(
 const CategoriesScreenWrapper = observer(() => {
   const [list] = useState(() => new CategoryListModel());
 
-  useEffect(() => {
-    list.addCategory();
-  }, []);
+  useEffect(() => {}, []);
 
   return <Categories list={list} />;
 });
@@ -139,5 +181,16 @@ const styles = StyleSheet.create({
     width: '100%',
     flex: 1,
     padding: 10,
+  },
+  fieldWrapper: {
+    flexDirection: 'row',
+    flex: 1,
+    width: '100%',
+    justifyContent: 'space-evenly',
+  },
+  fieldUpdateButton: {
+    borderRadius: 1,
+    height: '100%',
+    justifyContent: 'center',
   },
 });

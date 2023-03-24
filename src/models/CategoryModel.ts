@@ -43,6 +43,10 @@ export class CategoryModel implements ICategory {
       }),
     );
   };
+
+  removeField = (field: FieldModel) => {
+    this.fields = this.fields.filter(({ _id }: FieldModel) => field._id != _id);
+  };
 }
 
 export class CategoryListModel implements ICategoryList {
