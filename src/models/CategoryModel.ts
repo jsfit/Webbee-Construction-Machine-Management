@@ -7,6 +7,8 @@ import {
 } from 'mobx';
 import { FieldModel, IField } from './Fields';
 import { v4 as uuidv4 } from 'uuid';
+import { makePersistable } from 'mobx-persist-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface ICategory {
   _id: string;
@@ -24,13 +26,20 @@ export class CategoryModel implements ICategory {
   fields: FieldModel[] = [];
   items: FieldModel[][] = [];
 
-  constructor() {
-    this._id = uuidv4();
+  constructor(category?: CategoryModel) {
+    this._id = category?._id ?? uuidv4();
+    this.name = category?.name ?? '';
+    this.fields = category?.fields ?? [];
+
+    if (category?.fields?.length) {
+      this.fields = category.fields.map(
+        (field: FieldModel) => new FieldModel(field),
+      );
+    }
+
     this.addField();
     makeAutoObservable(this);
   }
-
-  init = () => {};
 
   setName = (name: string) => {
     this.name = name;
@@ -56,6 +65,30 @@ export class CategoryListModel implements ICategoryList {
   constructor() {
     this._id = uuidv4();
     makeAutoObservable(this);
+
+    makePersistable(
+      this,
+      {
+        name: 'CategoryListModel',
+
+        properties: [
+          {
+            key: 'categories',
+            serialize: value => {
+              return value;
+            },
+            deserialize: value => {
+              return value.map(
+                (category: CategoryModel) => new CategoryModel(category),
+              );
+            },
+          },
+        ],
+        storage: AsyncStorage,
+      },
+
+      { delay: 10, fireImmediately: false },
+    );
   }
 
   addCategory = () => {
