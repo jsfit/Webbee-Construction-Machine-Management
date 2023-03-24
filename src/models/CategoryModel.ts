@@ -20,11 +20,28 @@ export interface ICategoryList {
   categories: ICategory[];
 }
 
+export class Item {
+  _id: string = '';
+  model = observable.map({});
+
+  constructor(category?: CategoryModel) {
+    this._id = category?._id ?? uuidv4();
+
+    makeAutoObservable(this);
+  }
+
+  setAttribute(key?: string, value?: any) {
+    if (key) {
+      this.model.set(key, value);
+    }
+  }
+}
+
 export class CategoryModel implements ICategory {
   _id: string = '';
   name: string = 'New Category';
   fields: FieldModel[] = [];
-  items: FieldModel[][] = [];
+  items: Item[] = [];
 
   constructor(category?: CategoryModel) {
     this._id = category?._id ?? uuidv4();
@@ -56,6 +73,14 @@ export class CategoryModel implements ICategory {
 
   removeField = (field: FieldModel) => {
     this.fields = this.fields.filter(({ _id }: FieldModel) => field._id != _id);
+  };
+
+  addItem = () => {
+    this.items.unshift(new Item());
+  };
+
+  removeItem = (item: Item) => {
+    this.items = this.items.filter(_item => _item._id !== item._id);
   };
 }
 

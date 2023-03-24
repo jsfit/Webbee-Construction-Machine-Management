@@ -15,6 +15,8 @@ import { observer } from 'mobx-react-lite';
 import {
   CategoryListModelInstance,
   CategoryListModel,
+  CategoryModel,
+  Item,
 } from 'WebbeeReactNative/src/models/CategoryModel';
 import { FAB } from 'react-native-paper';
 import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
@@ -22,7 +24,7 @@ import { TextInput } from 'react-native-paper';
 import { FieldModel, InputTypes } from 'WebbeeReactNative/src/models/Fields';
 import { Menu, Divider, Provider } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 const fieldMenuItems = ['Text', 'Date', 'Number', 'Checkbox'];
 
@@ -58,43 +60,32 @@ const FieldMenu: React.FC<{
     </Menu>
   );
 });
-// const FieldWrapper: React.FC<{ field: FieldModel }> = observer(({ field }) => {
-//   switch (field.fieldType) {
-//     case InputTypes.Text:
-//     case InputTypes.Number:
-//       return (
-//         <TextInput
-//           keyboardType={
-//             field.fieldType === InputTypes.Text ? 'default' : 'numeric'
-//           }
-//           label={'Field'}
-//           value={field.name}
-//           onChangeText={field.setName}
-//           style={{ flex: 1 }}
-//         />
-//       );
+const FieldWrapper: React.FC<{
+  field: FieldModel;
+  item: Item;
+}> = observer(({ field, item }) => {
+  switch (field.fieldType) {
+    case InputTypes.Text:
+    case InputTypes.Number:
+      return (
+        <TextInput
+          keyboardType={
+            field.fieldType === InputTypes.Text ? 'default' : 'numeric'
+          }
+          label={field.name}
+          value={item.model.get(field._id)}
+          onChangeText={(value: any) => item.setAttribute(field._id, value)}
+          style={{ flex: 1 }}
+        />
+      );
 
-//     default:
-//       return <Text>123123</Text>;
-//   }
-// });
-
-const FieldWrapper: React.FC<{ field: FieldModel }> = observer(({ field }) => {
-  return (
-    <>
-      <TextInput
-        label={'Field'}
-        value={field.name}
-        onChangeText={field.setName}
-        style={{ flex: 1 }}
-      />
-      <FieldMenu title={field.fieldType} onChange={field.setFieldType} />
-    </>
-  );
+    default:
+      return <Text>123123</Text>;
+  }
 });
 
-const Categories: React.FC<{ list: CategoryListModel }> = observer(
-  ({ list }) => {
+const Category: React.FC<{ category: CategoryModel }> = observer(
+  ({ category }) => {
     const {
       Common,
       Fonts,
@@ -112,60 +103,29 @@ const Categories: React.FC<{ list: CategoryListModel }> = observer(
     return (
       <>
         <ScrollView contentContainerStyle={styles.containerStyle}>
-          {/* <TouchableOpacity
-            style={[Common.button.circle, Gutters.regularBMargin]}
-            onPress={() => onChangeTheme({ darkMode: !isDark })}
-          >
-            <Image
-              source={Images.icons.colors}
-              style={{ tintColor: isDark ? '#A6A4F0' : '#44427D' }}
-            />
-          </TouchableOpacity> */}
-          {list.categories.map((category, key) => {
-            return (
-              <View style={styles.cardWrapper} key={key}>
-                <Card style={[Layout.fullWidth, Layout.mb5]}>
+          <View style={styles.cardWrapper}>
+            {category.items.map((item, key) => {
+              return (
+                <Card style={[Layout.fullWidth, Layout.mb5]} key={key}>
                   <Card.Content>
-                    <Title>{category.name}</Title>
-                    <TextInput
-                      label="Category Name"
-                      value={category.name}
-                      onChangeText={category.setName}
-                    />
-
                     {category.fields.map((field: FieldModel, key: number) => {
                       return (
                         <View style={styles.fieldWrapper} key={key}>
-                          <FieldWrapper field={field} />
-                          <Icon
-                            name="close"
-                            size={25}
-                            style={{ alignSelf: 'center', marginRight: 1 }}
-                            onPress={() => category.removeField(field)}
-                          />
+                          <FieldWrapper field={field} item={item} />
                         </View>
                       );
                     })}
                   </Card.Content>
-                  <Card.Actions>
-                    <Button onPress={category.addField}>ADD NEW FIELD</Button>
-                    <Button
-                      style={styles.danger}
-                      onPress={() => list.removeCategory(category)}
-                    >
-                      <Icon name="delete" size={20} color="white" />
-                    </Button>
-                  </Card.Actions>
                 </Card>
-              </View>
-            );
-          })}
+              );
+            })}
+          </View>
         </ScrollView>
         <FAB
           style={styles.fab}
           small
           icon="plus"
-          onPress={list.addCategory}
+          onPress={category.addItem}
           color="white"
         />
       </>
@@ -173,19 +133,19 @@ const Categories: React.FC<{ list: CategoryListModel }> = observer(
   },
 );
 
-const CategoriesScreenWrapper = observer(props => {
-  const category = useMemo(
-    () => CategoryListModelInstance.getCategoryById(props.route.params._id),
-    [props?.route?.params?._id],
-  );
-  console.log(category?._id, category?.name);
-  useEffect(() => {}, []);
+const CategoryScreenWrapper = observer(() => {
+  const route: any = useRoute();
 
-  return <Text>asdasd</Text>;
-  // return <Categories list={list} />;
+  const category = useMemo(
+    () => CategoryListModelInstance.getCategoryById(route.params._id),
+    [route?.params?._id],
+  );
+
+  if (!category) return null;
+  return <Category category={category} />;
 });
 
-export default CategoriesScreenWrapper;
+export default CategoryScreenWrapper;
 
 const styles = StyleSheet.create({
   containerStyle: {
