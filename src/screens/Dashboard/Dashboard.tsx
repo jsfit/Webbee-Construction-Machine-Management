@@ -7,11 +7,21 @@ import {
 } from 'WebbeeReactNative/src/models';
 import { Button } from 'react-native-paper';
 import Category from '../Category/Category';
+import { useNavigation } from '@react-navigation/native';
 
 const Dashboard: React.FC<{ list: CategoryListModel }> = observer(
   ({ list }) => {
+    const navigation = useNavigation();
     return (
       <ScrollView contentContainerStyle={styles.containerStyle}>
+        {list.emptyCategories && (
+          <View style={styles.emptyListWrapper}>
+            <Text style={styles.emptyListText}>No Categories Available</Text>
+            <Button onPress={() => navigation.navigate('Main')} mode="outlined">
+              Add Category
+            </Button>
+          </View>
+        )}
         {list.categories.map(category => {
           return (
             <View style={styles.cardWrapper} key={category._id}>
@@ -71,5 +81,16 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: 'grey',
     alignSelf: 'center',
+  },
+  emptyListText: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  emptyListWrapper: {
+    justifyContent: 'center',
+    marginTop: 100,
+    alignItems: 'center',
   },
 });

@@ -67,4 +67,8 @@ export class CategoryModel implements ICategory {
 
     return 'UNNAMED FIELD';
   }
+
+  get emptyCategory() {
+    return !this.items.length;
+  }
 }

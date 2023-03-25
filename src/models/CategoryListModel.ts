@@ -51,6 +51,10 @@ export class CategoryListModel implements ICategoryList {
   getCategoryById = (_id: string) => {
     return this.categories.find(category => category._id == _id);
   };
+
+  get emptyCategories() {
+    return !this.categories.length;
+  }
 }
 
 const CategoryListModelInstance = new CategoryListModel();

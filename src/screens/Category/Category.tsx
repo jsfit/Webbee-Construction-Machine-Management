@@ -22,6 +22,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import { useRoute } from '@react-navigation/native';
 import ToggleSwitch from 'toggle-switch-react-native';
 import DatePicker from 'react-native-date-picker';
+import { Button } from 'react-native-paper';
 
 const FieldWrapper: React.FC<{
   field: FieldModel;
@@ -107,6 +108,15 @@ const Category: React.FC<{ category: CategoryModel; fabHide: boolean }> =
           ]}
         >
           <View style={styles.cardWrapper}>
+            {category.emptyCategory && !fabHide && (
+              <View style={styles.emptyListWrapper}>
+                <Text style={styles.emptyListText}>
+                  No <Text style={styles.categoryName}>{category.name}</Text>{' '}
+                  Available
+                  {`\n (Press on + icon)`}
+                </Text>
+              </View>
+            )}
             {category.items.map((item, key) => {
               return (
                 <Card style={[Layout.fullWidth, styles.mb10]} key={key}>
@@ -232,5 +242,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     marginLeft: 10,
+  },
+  emptyListText: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  emptyListWrapper: {
+    justifyContent: 'center',
+    marginTop: 100,
+    alignItems: 'center',
+  },
+  categoryName: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: 'blue',
   },
 });

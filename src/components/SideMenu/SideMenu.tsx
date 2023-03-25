@@ -11,12 +11,13 @@ import {
   DrawerItemList,
   DrawerItem,
 } from '@react-navigation/drawer';
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation, useRoute } from '@react-navigation/core';
 
 const SideMenu = observer(props => {
   const [list] = useState(() => CategoryListModelInstance);
   const [activeLink, setActiveLink] = useState('Dashboard');
   const navigation = useNavigation();
+  const currnetRoute = props.state.routeNames[props.state.index];
 
   return (
     <DrawerContentScrollView {...props}>
@@ -27,7 +28,7 @@ const SideMenu = observer(props => {
           navigation.navigate('Dashboard');
         }}
         style={{
-          backgroundColor: activeLink === 'Dashboard' ? '#b1e0f5' : '',
+          backgroundColor: currnetRoute.includes('Dashboard') ? '#b1e0f5' : '',
         }}
         {...props}
       />
@@ -59,7 +60,7 @@ const SideMenu = observer(props => {
           navigation.navigate('Main');
         }}
         style={{
-          backgroundColor: activeLink === 'Main' ? '#b1e0f5' : '',
+          backgroundColor: currnetRoute.includes('Main') ? '#b1e0f5' : '',
         }}
         {...props}
       />

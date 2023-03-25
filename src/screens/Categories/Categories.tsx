@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet, Text } from 'react-native';
 import { observer } from 'mobx-react-lite';
 import {
   CategoryListModelInstance,
@@ -88,6 +88,14 @@ const Categories: React.FC<{ list: CategoryListModel }> = observer(
     return (
       <>
         <ScrollView contentContainerStyle={styles.containerStyle}>
+          {list.emptyCategories && (
+            <View style={styles.emptyListWrapper}>
+              <Text style={styles.emptyListText}>
+                {`No Categories Available\n (Press on + icon)`}
+              </Text>
+            </View>
+          )}
+
           {list.categories.map((category, key) => {
             return (
               <View style={styles.cardWrapper} key={key}>
@@ -194,5 +202,16 @@ const styles = StyleSheet.create({
   },
   mt10: {
     marginTop: 10,
+  },
+  emptyListText: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  emptyListWrapper: {
+    justifyContent: 'center',
+    marginTop: 100,
+    alignItems: 'center',
   },
 });
