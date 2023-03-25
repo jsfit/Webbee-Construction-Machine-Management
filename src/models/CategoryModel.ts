@@ -52,7 +52,7 @@ export class CategoryModel implements ICategory {
   };
 
   addItem = () => {
-    this.items.unshift(new Item());
+    this.items.unshift(new Item(null, this));
   };
 
   removeItem = (item: Item) => {
