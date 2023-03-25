@@ -1,14 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import {
-  View,
-  TouchableOpacity,
-  ScrollView,
-  Image,
-  Text,
-  StyleSheet,
-} from 'react-native';
+import React, { useState } from 'react';
+import { View, ScrollView, StyleSheet } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../hooks';
 import { changeTheme, ThemeState } from '../../store/theme';
 import { observer } from 'mobx-react-lite';
@@ -17,67 +9,62 @@ import {
   CategoryListModel,
 } from 'WebbeeReactNative/src/models/CategoryModel';
 import { FAB } from 'react-native-paper';
-import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
+import { Button, Card, Title } from 'react-native-paper';
 import { TextInput } from 'react-native-paper';
-import { FieldModel, InputTypes } from 'WebbeeReactNative/src/models/Fields';
-import { Menu, Divider, Provider } from 'react-native-paper';
+import { FieldModel, IField } from 'WebbeeReactNative/src/models/Fields';
+import { Menu } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { useFocusEffect } from '@react-navigation/native';
 
-const fieldMenuItems = ['Text', 'Date', 'Number', 'Checkbox'];
+interface IMenuItem {
+  name: string;
+}
+const fieldMenuItems = [
+  { name: 'Text' },
+  { name: 'Date' },
+  { name: 'Number' },
+  { name: 'Checkbox' },
+];
 
 const FieldMenu: React.FC<{
   title: string | undefined;
-  onChange: (name: string) => void;
-}> = observer(({ title, onChange }) => {
+  onChange: (name: IMenuItem) => void;
+  items: Array<object> | Array<string>;
+  mode?: 'text' | 'outlined' | 'contained' | 'elevated' | 'contained-tonal';
+  buttonStyle?: any;
+}> = observer(({ title, onChange, items, mode = 'outlined', buttonStyle }) => {
   const [showDropDown, setShowDropDown] = useState(false);
 
-  const onPressItem = (name: string) => {
+  const onPressItem = (name: IMenuItem) => {
     setShowDropDown(false);
     onChange(name);
   };
+
   return (
     <Menu
       visible={showDropDown}
       onDismiss={() => setShowDropDown(false)}
       anchor={
         <Button
-          mode="outlined"
-          style={styles.fieldUpdateButton}
+          mode={mode}
+          style={buttonStyle}
           onPress={() => setShowDropDown(true)}
         >
           {title}
         </Button>
       }
     >
-      {fieldMenuItems.map((name, key) => {
+      {items.map((item: any, key: number) => {
         return (
-          <Menu.Item onPress={() => onPressItem(name)} title={name} key={key} />
+          <Menu.Item
+            onPress={() => onPressItem(item)}
+            title={item.name}
+            key={key}
+          />
         );
       })}
     </Menu>
   );
 });
-// const FieldWrapper: React.FC<{ field: FieldModel }> = observer(({ field }) => {
-//   switch (field.fieldType) {
-//     case InputTypes.Text:
-//     case InputTypes.Number:
-//       return (
-//         <TextInput
-//           keyboardType={
-//             field.fieldType === InputTypes.Text ? 'default' : 'numeric'
-//           }
-//           label={'Field'}
-//           value={field.name}
-//           onChangeText={field.setName}
-//           style={{ flex: 1 }}
-//         />
-//       );
-
-//     default:
-//       return <Text>123123</Text>;
-//   }
-// });
 
 const FieldWrapper: React.FC<{ field: FieldModel }> = observer(({ field }) => {
   return (
@@ -88,43 +75,25 @@ const FieldWrapper: React.FC<{ field: FieldModel }> = observer(({ field }) => {
         onChangeText={field.setName}
         style={{ flex: 1 }}
       />
-      <FieldMenu title={field.fieldType} onChange={field.setFieldType} />
+      <FieldMenu
+        title={field.fieldType}
+        onChange={item => field.setFieldType(item.name)}
+        items={fieldMenuItems}
+        buttonStyle={styles.fieldUpdateButton}
+      />
     </>
   );
 });
 
 const Categories: React.FC<{ list: CategoryListModel }> = observer(
   ({ list }) => {
-    const {
-      Common,
-      Fonts,
-      Gutters,
-      Layout,
-      Images,
-      darkMode: isDark,
-    } = useTheme();
-    const dispatch = useDispatch();
-
-    const onChangeTheme = ({ theme, darkMode }: Partial<ThemeState>) => {
-      dispatch(changeTheme({ theme, darkMode }));
-    };
-
     return (
       <>
         <ScrollView contentContainerStyle={styles.containerStyle}>
-          {/* <TouchableOpacity
-            style={[Common.button.circle, Gutters.regularBMargin]}
-            onPress={() => onChangeTheme({ darkMode: !isDark })}
-          >
-            <Image
-              source={Images.icons.colors}
-              style={{ tintColor: isDark ? '#A6A4F0' : '#44427D' }}
-            />
-          </TouchableOpacity> */}
           {list.categories.map((category, key) => {
             return (
               <View style={styles.cardWrapper} key={key}>
-                <Card style={[Layout.fullWidth, Layout.mb5]}>
+                <Card style={styles.categoryCard}>
                   <Card.Content>
                     <Title>{category.name}</Title>
                     <TextInput
@@ -146,6 +115,16 @@ const Categories: React.FC<{ list: CategoryListModel }> = observer(
                         </View>
                       );
                     })}
+
+                    <FieldMenu
+                      mode="contained"
+                      title={`Titled Field: ${category.titleFieldName}`}
+                      items={category.fields}
+                      onChange={(field: IField) => {
+                        category.setTitleFieldId(field._id ?? '');
+                      }}
+                      buttonStyle={styles.mt10}
+                    />
                   </Card.Content>
                   <Card.Actions>
                     <Button onPress={category.addField}>ADD NEW FIELD</Button>
@@ -210,5 +189,12 @@ const styles = StyleSheet.create({
   },
   danger: {
     backgroundColor: 'red',
+  },
+  categoryCard: {
+    marginBottom: 5,
+    width: '100%',
+  },
+  mt10: {
+    marginTop: 10,
   },
 });

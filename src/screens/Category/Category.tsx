@@ -83,7 +83,7 @@ const FieldWrapper: React.FC<{
           </TouchableOpacity>
           <DatePicker
             mode="date"
-            date={value ? new Date(value) : new Date()}
+            date={item.isDate(value) ? new Date(value) : new Date()}
             modal
             open={datePicker}
             onConfirm={date => {

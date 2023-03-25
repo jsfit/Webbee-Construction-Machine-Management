@@ -13,11 +13,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export interface ICategory {
   _id: string;
   name: string;
+  titleFieldId: string;
   fields: IField[];
 }
 export interface ICategoryList {
   _id: string;
-  categories: ICategory[];
+  categories: CategoryModel[];
 }
 
 export class Item {
@@ -38,17 +39,23 @@ export class Item {
       this.model[attribute] = value;
     }
   }
+
+  isDate = date => {
+    return new Date(date) != 'Invalid Date' && !isNaN(new Date(date));
+  };
 }
 
 export class CategoryModel implements ICategory {
   _id: string = '';
   name: string = 'New Category';
+  titleFieldId: string = '';
   fields: FieldModel[] = [];
   items: Item[] = [];
 
   constructor(category?: CategoryModel) {
     this._id = category?._id ?? uuidv4();
-    this.name = category?.name ?? 'New Category';
+    this.name = category?.name ?? this.name;
+    this.titleFieldId = category?.titleFieldId ?? this.titleFieldId;
     this.fields = category?.fields ?? [];
 
     if (category?.fields?.length) {
@@ -67,6 +74,10 @@ export class CategoryModel implements ICategory {
 
   setName = (name: string) => {
     this.name = name;
+  };
+
+  setTitleFieldId = (titleFieldId: string) => {
+    this.titleFieldId = titleFieldId;
   };
 
   addField = () => {
@@ -88,6 +99,15 @@ export class CategoryModel implements ICategory {
   removeItem = (item: Item) => {
     this.items = this.items.filter(_item => _item._id !== item._id);
   };
+  
+  get titleFieldName() {
+    let field = this.fields.find(field => field._id === this.titleFieldId);
+    if (field) {
+      return field.name;
+    }
+
+    return 'UNNAMED FIELD';
+  }
 }
 
 export class CategoryListModel implements ICategoryList {
