@@ -7,13 +7,14 @@ export class Item {
   model = observable.object({});
   titleFieldId: string | undefined;
 
-  constructor(item?: Item, parent?: CategoryModel) {
+  constructor(item?: Item | null, parent?: CategoryModel) {
     this._id = item?._id ?? uuidv4();
     if (item?.model) {
       this.model = observable.object(item?.model);
     }
 
     autorun(() => {
+      console.log('On title field updated', parent?.titleFieldId);
       runInAction(() => {
         this.titleFieldId = parent?.titleFieldId;
       });
