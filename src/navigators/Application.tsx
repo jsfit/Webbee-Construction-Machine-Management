@@ -1,6 +1,5 @@
 import React from 'react';
-import { SafeAreaView, StatusBar, Text, View } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { SafeAreaView, StatusBar } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import {
@@ -11,7 +10,6 @@ import {
 import { Categories, Category, Dashboard } from '../screens';
 import { useTheme } from '../hooks';
 import { useFlipper } from '@react-navigation/devtools';
-import { ApplicationStackParamList } from '../../@types/navigation';
 import { SideMenu } from '../components';
 import Icon from 'react-native-vector-icons/Feather';
 
@@ -25,7 +23,6 @@ const ApplicationNavigator = () => {
   const navigationRef = useNavigationContainerRef();
 
   useFlipper(navigationRef);
-  console.log(navigationRef?.dispatch);
   const headerLeft = () => {
     return (
       <Icon
