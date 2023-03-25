@@ -26,44 +26,9 @@ import { Menu, Divider, Provider } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { Layout } from 'WebbeeReactNative/src/theme';
 import ToggleSwitch from 'toggle-switch-react-native';
 import DatePicker from 'react-native-date-picker';
 
-const fieldMenuItems = ['Text', 'Date', 'Number', 'Checkbox'];
-
-const FieldMenu: React.FC<{
-  title: string | undefined;
-  onChange: (name: string) => void;
-}> = observer(({ title, onChange }) => {
-  const [showDropDown, setShowDropDown] = useState(false);
-
-  const onPressItem = (name: string) => {
-    setShowDropDown(false);
-    onChange(name);
-  };
-  return (
-    <Menu
-      visible={showDropDown}
-      onDismiss={() => setShowDropDown(false)}
-      anchor={
-        <Button
-          mode="outlined"
-          style={styles.fieldUpdateButton}
-          onPress={() => setShowDropDown(true)}
-        >
-          {title}
-        </Button>
-      }
-    >
-      {fieldMenuItems.map((name, key) => {
-        return (
-          <Menu.Item onPress={() => onPressItem(name)} title={name} key={key} />
-        );
-      })}
-    </Menu>
-  );
-});
 const FieldWrapper: React.FC<{
   field: FieldModel;
   item: Item;
@@ -75,10 +40,7 @@ const FieldWrapper: React.FC<{
     case InputTypes.Text:
     case InputTypes.Number:
       return (
-        <View
-          style={{ flexDirection: 'column', flex: 1, marginVertical: 5 }}
-          key={item._id}
-        >
+        <View style={styles.textWrapper}>
           <Text>{field.name}</Text>
           <TextInput
             keyboardType={
@@ -88,20 +50,13 @@ const FieldWrapper: React.FC<{
             onChangeText={(value: any) =>
               item.setAttribute(field._id ?? '', value)
             }
-            style={{ flex: 1 }}
           />
         </View>
       );
 
     case InputTypes.Checkbox:
       return (
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}
-        >
+        <View style={styles.checkbox}>
           <ToggleSwitch
             isOn={!!value}
             onColor="green"
@@ -115,27 +70,14 @@ const FieldWrapper: React.FC<{
       );
 
     case InputTypes.Date:
-      console.log(value);
       return (
-        <View
-          style={{
-            flex: 1,
-            marginTop: 10,
-          }}
-        >
+        <View style={styles.dateWrapper}>
           <Text>{field.name}</Text>
           <TouchableOpacity
             onPress={() => {
               setDatePicker(true);
             }}
-            style={{
-              width: '100%',
-              backgroundColor: '#e7e0ec',
-              height: 50,
-              justifyContent: 'center',
-              padding: 10,
-              marginVertical: 10,
-            }}
+            style={styles.selectDate}
           >
             <Text>{value || `Select Date`}</Text>
           </TouchableOpacity>
@@ -181,6 +123,17 @@ const Category: React.FC<{ category: CategoryModel }> = observer(
             {category.items.map((item, key) => {
               return (
                 <Card style={[Layout.fullWidth, styles.mb10]} key={key}>
+                  <Icon
+                    onPress={() => category.removeItem(item)}
+                    name="delete"
+                    size={20}
+                    color={'red'}
+                    style={{
+                      alignSelf: 'flex-end',
+                      paddingRight: 10,
+                      paddingTop: 10,
+                    }}
+                  />
                   <Card.Content>
                     {category.fields.map((field: FieldModel, key: number) => {
                       return (
@@ -253,5 +206,27 @@ const styles = StyleSheet.create({
   },
   mb10: {
     marginBottom: 10,
+  },
+  checkbox: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  dateWrapper: {
+    flex: 1,
+    marginTop: 10,
+  },
+  selectDate: {
+    width: '100%',
+    backgroundColor: '#e7e0ec',
+    height: 50,
+    justifyContent: 'center',
+    padding: 10,
+    marginVertical: 10,
+  },
+  textWrapper: {
+    flexDirection: 'column',
+    flex: 1,
+    marginVertical: 5,
   },
 });
