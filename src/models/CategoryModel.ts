@@ -1,20 +1,8 @@
 import { makeAutoObservable } from 'mobx';
-import { FieldModel, IField } from './Fields';
+import { FieldModel } from './Fields';
 import { v4 as uuidv4 } from 'uuid';
-import { makePersistable } from 'mobx-persist-store';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Item } from './ItemModal';
-
-export interface ICategory {
-  _id: string;
-  name: string;
-  titleFieldId: string;
-  fields: IField[];
-}
-export interface ICategoryList {
-  _id: string;
-  categories: CategoryModel[];
-}
+import { ICategory } from './types';
 
 export class CategoryModel implements ICategory {
   _id: string = '';
@@ -31,7 +19,7 @@ export class CategoryModel implements ICategory {
 
     if (category?.fields?.length) {
       this.fields = category.fields.map(
-        (field: FieldModel) => new FieldModel(field, this),
+        (field: FieldModel) => new FieldModel(field),
       );
     } else {
       this.addField();
@@ -80,54 +68,3 @@ export class CategoryModel implements ICategory {
     return 'UNNAMED FIELD';
   }
 }
-
-export class CategoryListModel implements ICategoryList {
-  _id: string = '';
-  categories: CategoryModel[] = [];
-
-  constructor() {
-    this._id = uuidv4();
-
-    makePersistable(
-      this,
-      {
-        name: 'CategoryListModel',
-        stringify: true,
-        properties: [
-          {
-            key: 'categories',
-            serialize: value => {
-              return value;
-            },
-            deserialize: value => {
-              return value.map(
-                (category: CategoryModel) => new CategoryModel(category),
-              );
-            },
-          },
-        ],
-        storage: AsyncStorage,
-      },
-
-      { delay: 100, fireImmediately: false },
-    );
-    makeAutoObservable(this);
-  }
-
-  addCategory = () => {
-    this.categories.unshift(new CategoryModel());
-  };
-
-  removeCategory = (category: ICategory) => {
-    this.categories = this.categories.filter(
-      (_category: ICategory) => _category._id != category._id,
-    );
-  };
-
-  getCategoryById = (_id: string) => {
-    return this.categories.find(category => category._id == _id);
-  };
-}
-
-const CategoryListModelInstance = new CategoryListModel();
-export { CategoryListModelInstance };

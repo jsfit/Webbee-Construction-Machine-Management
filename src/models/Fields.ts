@@ -1,23 +1,12 @@
-import {
-  makeAutoObservable,
-  autorun,
-  toJS,
-  makeObservable,
-  observable,
-} from 'mobx';
+import { makeAutoObservable } from 'mobx';
 import { v4 as uuidv4 } from 'uuid';
+import { IField } from './types';
 
 export enum InputTypes {
   Date = 'Date',
   Text = 'Text',
   Number = 'Number',
   Checkbox = 'Checkbox',
-}
-
-export interface IField {
-  _id?: string;
-  name?: string;
-  fieldType?: string;
 }
 
 export class FieldModel implements IField {

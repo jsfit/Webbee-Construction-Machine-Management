@@ -6,7 +6,7 @@ export class Item {
   _id: string = '';
   model = observable.object({});
   parent: CategoryModel | undefined;
-  constructor(item: Item, parent: CategoryModel) {
+  constructor(item?: Item, parent?: CategoryModel) {
     this._id = item?._id ?? uuidv4();
     this.parent = parent;
     if (item?.model) {

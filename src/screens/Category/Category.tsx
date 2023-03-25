@@ -1,31 +1,25 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   View,
   ScrollView,
-  Image,
   Text,
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../hooks';
-import { changeTheme, ThemeState } from '../../store/theme';
 import { observer } from 'mobx-react-lite';
 import {
   CategoryListModelInstance,
-  CategoryListModel,
   CategoryModel,
   Item,
-} from 'WebbeeReactNative/src/models/CategoryModel';
+  FieldModel,
+  InputTypes,
+} from 'WebbeeReactNative/src/models';
 import { FAB } from 'react-native-paper';
-import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
+import { Card } from 'react-native-paper';
 import { TextInput } from 'react-native-paper';
-import { FieldModel, InputTypes } from 'WebbeeReactNative/src/models/Fields';
-import { Menu, Divider, Provider } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/AntDesign';
-import Fontisto from 'react-native-vector-icons/Fontisto';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 import ToggleSwitch from 'toggle-switch-react-native';
 import DatePicker from 'react-native-date-picker';
 

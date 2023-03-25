@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import {
   CategoryListModelInstance,
   CategoryListModel,
-} from 'WebbeeReactNative/src/models/CategoryModel';
+} from 'WebbeeReactNative/src/models';
 import { Button } from 'react-native-paper';
 import Category from '../Category/Category';
 
@@ -12,7 +12,7 @@ const Dashboard: React.FC<{ list: CategoryListModel }> = observer(
   ({ list }) => {
     return (
       <ScrollView contentContainerStyle={styles.containerStyle}>
-        {list.categories.map((category, key) => {
+        {list.categories.map(category => {
           return (
             <View style={styles.cardWrapper} key={category._id}>
               <View style={styles.cardHeader}>

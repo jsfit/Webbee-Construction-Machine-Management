@@ -5,7 +5,7 @@ import { Text, View } from 'react-native';
 import {
   CategoryListModelInstance,
   CategoryListModel,
-} from 'WebbeeReactNative/src/models/CategoryModel';
+} from 'WebbeeReactNative/src/models';
 import {
   DrawerContentScrollView,
   DrawerItemList,

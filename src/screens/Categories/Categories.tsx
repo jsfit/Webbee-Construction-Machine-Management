@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { useTheme } from '../../hooks';
-import { changeTheme, ThemeState } from '../../store/theme';
 import { observer } from 'mobx-react-lite';
 import {
   CategoryListModelInstance,
   CategoryListModel,
-} from 'WebbeeReactNative/src/models/CategoryModel';
+  FieldModel,
+  IField,
+} from 'WebbeeReactNative/src/models';
 import { FAB } from 'react-native-paper';
 import { Button, Card, Title } from 'react-native-paper';
 import { TextInput } from 'react-native-paper';
-import { FieldModel, IField } from 'WebbeeReactNative/src/models/Fields';
 import { Menu } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/AntDesign';
 
