@@ -24,9 +24,10 @@ export interface ICategoryList {
 export class Item {
   _id: string = '';
   model = observable.object({});
-
-  constructor(item?: Item) {
+  parent: CategoryModel | undefined;
+  constructor(item?: Item, parent: CategoryModel) {
     this._id = item?._id ?? uuidv4();
+    this.parent = parent;
     if (item?.model) {
       this.model = observable.object(item?.model);
     }
@@ -41,8 +42,18 @@ export class Item {
   }
 
   isDate = date => {
-    return new Date(date) != 'Invalid Date' && !isNaN(new Date(date));
+    return (
+      (new Date(date) as unknown as string) != 'Invalid Date' &&
+      !isNaN(new Date(date) as unknown as number)
+    );
   };
+
+  get titleFieldValue() {
+    return (
+      this.model[this.parent?.titleFieldId as string] ??
+      this.parent?.titleFieldName
+    );
+  }
 }
 
 export class CategoryModel implements ICategory {
@@ -60,14 +71,14 @@ export class CategoryModel implements ICategory {
 
     if (category?.fields?.length) {
       this.fields = category.fields.map(
-        (field: FieldModel) => new FieldModel(field),
+        (field: FieldModel) => new FieldModel(field, this),
       );
     } else {
       this.addField();
     }
 
     if (category?.items.length) {
-      this.items = category?.items.map((item: Item) => new Item(item));
+      this.items = category?.items.map((item: Item) => new Item(item, this));
     }
     makeAutoObservable(this);
   }
@@ -99,7 +110,7 @@ export class CategoryModel implements ICategory {
   removeItem = (item: Item) => {
     this.items = this.items.filter(_item => _item._id !== item._id);
   };
-  
+
   get titleFieldName() {
     let field = this.fields.find(field => field._id === this.titleFieldId);
     if (field) {

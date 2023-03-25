@@ -102,19 +102,7 @@ const FieldWrapper: React.FC<{
 
 const Category: React.FC<{ category: CategoryModel; fabHide: boolean }> =
   observer(({ category, fabHide }) => {
-    const {
-      Common,
-      Fonts,
-      Gutters,
-      Layout,
-      Images,
-      darkMode: isDark,
-    } = useTheme();
-    const dispatch = useDispatch();
-
-    const onChangeTheme = ({ theme, darkMode }: Partial<ThemeState>) => {
-      dispatch(changeTheme({ theme, darkMode }));
-    };
+    const { Layout } = useTheme();
 
     return (
       <>
@@ -128,17 +116,18 @@ const Category: React.FC<{ category: CategoryModel; fabHide: boolean }> =
             {category.items.map((item, key) => {
               return (
                 <Card style={[Layout.fullWidth, styles.mb10]} key={key}>
-                  <Icon
-                    onPress={() => category.removeItem(item)}
-                    name="delete"
-                    size={20}
-                    color={'red'}
-                    style={{
-                      alignSelf: 'flex-end',
-                      paddingRight: 10,
-                      paddingTop: 10,
-                    }}
-                  />
+                  <View style={styles.cardHeader}>
+                    <Text style={styles.titleFieldStyle}>
+                      {item.titleFieldValue}
+                    </Text>
+                    <Icon
+                      onPress={() => category.removeItem(item)}
+                      name="delete"
+                      size={20}
+                      color={'red'}
+                    />
+                  </View>
+
                   <Card.Content>
                     {category.fields.map((field: FieldModel, key: number) => {
                       return (
@@ -237,5 +226,17 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     flex: 1,
     marginVertical: 5,
+  },
+  cardHeader: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+    paddingVertical: 10,
+  },
+  titleFieldStyle: {
+    fontSize: 14,
+    fontWeight: '600',
+    marginLeft: 10,
   },
 });
