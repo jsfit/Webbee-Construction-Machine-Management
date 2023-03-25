@@ -15,11 +15,22 @@ import { useNavigation } from '@react-navigation/core';
 
 const SideMenu = observer(props => {
   const [list] = useState(() => CategoryListModelInstance);
-  const [activeLink, setActiveLink] = useState('Main');
+  const [activeLink, setActiveLink] = useState('Dashboard');
   const navigation = useNavigation();
 
   return (
     <DrawerContentScrollView {...props}>
+      <DrawerItem
+        label={'Dashboard'}
+        onPress={() => {
+          setActiveLink('Dashboard');
+          navigation.navigate('Dashboard');
+        }}
+        style={{
+          backgroundColor: activeLink === 'Dashboard' ? '#b1e0f5' : '',
+        }}
+        {...props}
+      />
       {list.categories.map((category, key) => {
         return (
           <DrawerItem

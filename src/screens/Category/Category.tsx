@@ -100,8 +100,8 @@ const FieldWrapper: React.FC<{
   }
 });
 
-const Category: React.FC<{ category: CategoryModel }> = observer(
-  ({ category }) => {
+const Category: React.FC<{ category: CategoryModel; fabHide: boolean }> =
+  observer(({ category, fabHide }) => {
     const {
       Common,
       Fonts,
@@ -118,7 +118,12 @@ const Category: React.FC<{ category: CategoryModel }> = observer(
 
     return (
       <>
-        <ScrollView contentContainerStyle={styles.containerStyle}>
+        <ScrollView
+          contentContainerStyle={[
+            styles.containerStyle,
+            { paddingBottom: fabHide ? 10 : 80 },
+          ]}
+        >
           <View style={styles.cardWrapper}>
             {category.items.map((item, key) => {
               return (
@@ -148,36 +153,40 @@ const Category: React.FC<{ category: CategoryModel }> = observer(
             })}
           </View>
         </ScrollView>
-        <FAB
-          style={styles.fab}
-          small
-          icon="plus"
-          onPress={category.addItem}
-          color="white"
-        />
+        {!fabHide && (
+          <FAB
+            style={styles.fab}
+            small
+            icon="plus"
+            onPress={category.addItem}
+            color="white"
+          />
+        )}
       </>
     );
-  },
-);
+  });
 
-const CategoryScreenWrapper = observer(() => {
+const CategoryScreenWrapper: React.FC<{
+  categoryItem: CategoryModel;
+  fabHide: boolean;
+}> = observer(({ categoryItem, fabHide = false }) => {
   const route: any = useRoute();
 
   const category = useMemo(
-    () => CategoryListModelInstance.getCategoryById(route.params._id),
+    () =>
+      categoryItem ||
+      CategoryListModelInstance.getCategoryById(route.params._id),
     [route?.params?._id],
   );
 
   if (!category) return null;
-  return <Category category={category} />;
+  return <Category category={category} fabHide={fabHide} />;
 });
 
 export default CategoryScreenWrapper;
 
 const styles = StyleSheet.create({
-  containerStyle: {
-    paddingBottom: 80,
-  },
+  containerStyle: {},
   fab: {
     position: 'absolute',
     margin: 16,

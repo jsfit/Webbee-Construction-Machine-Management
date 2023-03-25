@@ -8,7 +8,7 @@ import {
   NavigationContainer,
   useNavigationContainerRef,
 } from '@react-navigation/native';
-import { Categories, Category } from '../screens';
+import { Categories, Category, Dashboard } from '../screens';
 import { useTheme } from '../hooks';
 import { useFlipper } from '@react-navigation/devtools';
 import { ApplicationStackParamList } from '../../@types/navigation';
@@ -45,11 +45,17 @@ const ApplicationNavigator = () => {
           drawerContent={props => <SideMenu {...props} />}
         >
           <Drawer.Screen
+            name="Dashboard"
+            component={Dashboard}
+            options={{
+              headerLeft,
+            }}
+          />
+          <Drawer.Screen
             name="Main"
             component={Categories}
             options={{
               title: 'Manage Categories',
-              unmountOnBlur: true,
               headerLeft,
             }}
           />
@@ -58,7 +64,6 @@ const ApplicationNavigator = () => {
             component={Category}
             options={({ route }) => ({
               title: route.params?.title,
-              unmountOnBlur: true,
               headerLeft,
             })}
           />
