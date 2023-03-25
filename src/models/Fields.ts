@@ -11,7 +11,7 @@ export enum InputTypes {
   Date = 'Date',
   Text = 'Text',
   Number = 'Number',
-  Checknox = 'Checknox',
+  Checkbox = 'Checkbox',
 }
 
 export interface IField {

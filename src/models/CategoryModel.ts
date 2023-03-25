@@ -22,12 +22,12 @@ export interface ICategoryList {
 
 export class Item {
   _id: string = '';
-  model: {} = observable.object({});
+  model = observable.object({});
 
   constructor(item?: Item) {
     this._id = item?._id ?? uuidv4();
     if (item?.model) {
-      this.model = item?.model;
+      this.model = observable.object(item?.model);
     }
 
     makeAutoObservable(this);

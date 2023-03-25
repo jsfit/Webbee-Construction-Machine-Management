@@ -17,7 +17,7 @@
     "@react-native-async-storage/async-storage": "^1.17.12",
     "@react-native-masked-view/masked-view": "^0.2.8",
     "@react-navigation/bottom-tabs": "^6.5.7",
-    "@react-navigation/drawer": "^6.6.2",
+    "@react-navigation/drawer": "6.5.0",
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/stack": "^6.3.16",
     "@reduxjs/toolkit": "^1.9.3",
@@ -28,6 +28,7 @@
     "react": "18.2.0",
     "react-i18next": "^12.2.0",
     "react-native": "0.71.4",
+    "react-native-date-picker": "^4.2.9",
     "react-native-gesture-handler": "^2.9.0",
     "react-native-get-random-values": "^1.8.0",
     "react-native-mmkv": "^2.6.2",
@@ -38,6 +39,7 @@
     "react-native-vector-icons": "^9.2.0",
     "react-redux": "^8.0.5",
     "redux-persist": "^6.0.0",
+    "toggle-switch-react-native": "^3.3.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   View,
-  TouchableOpacity,
   ScrollView,
   Image,
   Text,
   StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -24,8 +24,11 @@ import { TextInput } from 'react-native-paper';
 import { FieldModel, InputTypes } from 'WebbeeReactNative/src/models/Fields';
 import { Menu, Divider, Provider } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/AntDesign';
+import Fontisto from 'react-native-vector-icons/Fontisto';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Layout } from 'WebbeeReactNative/src/theme';
+import ToggleSwitch from 'toggle-switch-react-native';
+import DatePicker from 'react-native-date-picker';
 
 const fieldMenuItems = ['Text', 'Date', 'Number', 'Checkbox'];
 
@@ -65,18 +68,23 @@ const FieldWrapper: React.FC<{
   field: FieldModel;
   item: Item;
 }> = observer(({ field, item }) => {
+  const [datePicker, setDatePicker] = useState(false);
+  let value = item.model[field._id ?? ''] ?? '';
+
   switch (field.fieldType) {
     case InputTypes.Text:
     case InputTypes.Number:
       return (
-        <View style={{ flexDirection: 'column', flex: 1, marginVertical: 5 }}>
+        <View
+          style={{ flexDirection: 'column', flex: 1, marginVertical: 5 }}
+          key={item._id}
+        >
           <Text>{field.name}</Text>
           <TextInput
-            key={item._id}
             keyboardType={
               field.fieldType === InputTypes.Text ? 'default' : 'numeric'
             }
-            value={item.model[field._id ?? '']}
+            value={value}
             onChangeText={(value: any) =>
               item.setAttribute(field._id ?? '', value)
             }
@@ -85,8 +93,68 @@ const FieldWrapper: React.FC<{
         </View>
       );
 
+    case InputTypes.Checkbox:
+      return (
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
+          <ToggleSwitch
+            isOn={!!value}
+            onColor="green"
+            offColor="grey"
+            label={field.name}
+            size="medium"
+            onToggle={isOn => item.setAttribute(field._id ?? '', isOn)}
+            labelStyle={{ marginLeft: 0 }}
+          />
+        </View>
+      );
+
+    case InputTypes.Date:
+      console.log(value);
+      return (
+        <View
+          style={{
+            flex: 1,
+            marginTop: 10,
+          }}
+        >
+          <Text>{field.name}</Text>
+          <TouchableOpacity
+            onPress={() => {
+              setDatePicker(true);
+            }}
+            style={{
+              width: '100%',
+              backgroundColor: '#e7e0ec',
+              height: 50,
+              justifyContent: 'center',
+              padding: 10,
+              marginVertical: 10,
+            }}
+          >
+            <Text>{value || `Select Date`}</Text>
+          </TouchableOpacity>
+          <DatePicker
+            mode="date"
+            date={value ? new Date(value) : new Date()}
+            modal
+            open={datePicker}
+            onConfirm={date => {
+              item.setAttribute(field._id ?? '', date.toDateString());
+              setDatePicker(false);
+            }}
+            onCancel={() => setDatePicker(false)}
+          />
+        </View>
+      );
+
     default:
-      return <Text>123123</Text>;
+      return <Text>No Component</Text>;
   }
 });
 
